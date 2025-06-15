@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ function Login() {
   const [success, setSuccess] = useState("");
 
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +38,10 @@ function Login() {
       localStorage.setItem("token", data.token);
       login(data.token);
       setSuccess("התחברת בהצלחה!");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+
     } catch (err) {
       setError(err.message);
     }
@@ -43,32 +49,42 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">התחברות</h2>
+      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4">התחברות</h2>
 
-        {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-2">{error}</div>}
-        {success && <div className="bg-green-100 text-green-700 p-2 rounded mb-2">{success}</div>}
+          {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-2">{error}</div>}
+          {success && <div className="bg-green-100 text-green-700 p-2 rounded mb-2">{success}</div>}
 
-        <input
-          type="email"
-          placeholder="אימייל"
-          className="w-full border p-2 mb-3 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            placeholder="אימייל"
+            className="w-full border p-2 mb-3 rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="סיסמה"
-          className="w-full border p-2 mb-4 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            type="password"
+            placeholder="סיסמה"
+            className="w-full border p-2 mb-4 rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button type="submit" className="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">
-          התחבר
-        </button>
-      </form>
+          <button type="submit" className="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">
+            התחבר
+          </button>
+        </form>
+
+
+        <p className="text-sm text-center mt-4 text-gray-700">
+          אין לך חשבון?{" "}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            הירשם עכשיו
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
